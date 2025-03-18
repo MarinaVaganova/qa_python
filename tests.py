@@ -1,24 +1,60 @@
-from main import BooksCollector
+import pytest
+
+
+from conftest import fantasy_book, horror_book, detective_book, child_book, comedy_book
+
 
 # класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
-# обязательно указывать префикс Test
 class TestBooksCollector:
 
-    # пример теста:
-    # обязательно указывать префикс test_
-    # дальше идет название метода, который тестируем add_new_book_
-    # затем, что тестируем add_two_books - добавление двух книг
-    def test_add_new_book_add_two_books(self):
-        # создаем экземпляр (объект) класса BooksCollector
-        collector = BooksCollector()
+    # Проверка добавления 2-х книг с одинаковым названием
+    def test_add_new_book_add_duplicate_book(self, books_collector):
+        books_collector.add_new_book(child_book)
+        books_collector.add_new_book(child_book)
+        assert len(books_collector.get_books_genre()) == 1
 
-        # добавляем две книги
-        collector.add_new_book('Гордость и предубеждение и зомби')
-        collector.add_new_book('Что делать, если ваш кот хочет вас убить')
+    # Проверка добавления книги с названием более 40 символов
+    def test_add_new_book_add_book_more_40_symbols(self, books_collector):
+        books_collector.add_new_book('Сияние Сияние Сияние Сияние Сияниееееееее')
+        assert len(books_collector.get_books_genre()) == 0
 
-        # проверяем, что добавилось именно две
-        # словарь books_rating, который нам возвращает метод get_books_rating, имеет длину 2
-        assert len(collector.get_books_rating()) == 2
+    # Проверка установки корректного жанра для книги
+    def test_set_book_genre_get_genre_success(self, books_collector, prepare_books):
+        assert books_collector.get_book_genre(comedy_book) == 'Комедии'
 
-    # напиши свои тесты ниже
-    # чтобы тесты были независимыми в каждом из них создавай отдельный экземпляр класса BooksCollector()
+    # Проверка вывода книги определенного жанра
+    def test_get_books_with_specific_genre_book_get_list_genre(self, books_collector, prepare_books):
+        genre = 'Фантастика'
+        assert books_collector.get_books_with_specific_genre(genre) == [fantasy_book]
+
+    # Проверка вывода пустого словаря, если в коллекции нет книг
+    def test_get_books_genre_empty(self, books_collector):
+        assert books_collector.get_books_genre() == {}
+
+    # Проверка корректного вывода словаря для разных книг и жанров
+    @pytest.mark.parametrize('book, genre', [('Марсианин', 'Фантастика'),('Сияние','Ужасы'),('Маленький принц','Мультфильмы')])
+    def test_get_books_genre_different_books_and_genres(self, books_collector, book, genre):
+        books_collector.add_new_book(book)
+        books_collector.set_book_genre(book, genre)
+        assert books_collector.get_books_genre() == {book: genre}
+
+    # Проверка списка книг, подходящих детям
+    def test_get_books_for_children_three_books_get_list_books(self, books_collector, prepare_books):
+        assert books_collector.get_books_for_children() == [fantasy_book, child_book, comedy_book]
+
+    # Проверка добавления книги в избранное
+    def test_add_book_in_favorites_add_one_book_success(self, books_collector, prepare_books):
+        books_collector.add_book_in_favorites(horror_book)
+        assert books_collector.get_list_of_favorites_books() == [horror_book]
+
+    # Проверка добавления книги в избранное 2 раза
+    def test_add_book_in_favorites_add_duplicate_book(self, books_collector, prepare_books):
+        books_collector.add_book_in_favorites(horror_book)
+        books_collector.add_book_in_favorites(horror_book)
+        assert len(books_collector.get_list_of_favorites_books()) == 1
+
+    # Проверка удаления книги из избранного
+    def test_delete_book_from_favorites_delete_one_book_success(self, books_collector, prepare_books):
+        books_collector.add_book_in_favorites(detective_book)
+        books_collector.delete_book_from_favorites(detective_book)
+        assert books_collector.get_list_of_favorites_books() == []
