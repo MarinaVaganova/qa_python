@@ -59,3 +59,13 @@ class TestBooksCollector:
         books_collector.add_book_in_favorites(detective_book)
         books_collector.delete_book_from_favorites(detective_book)
         assert books_collector.get_list_of_favorites_books() == []
+
+    # Проверка корректного вывода жанра книги по её имени
+    def test_get_book_genre_get_genre_success(self, books_collector, prepare_books):
+        assert books_collector.get_book_genre(comedy_book) == 'Комедии'
+
+    # Проверка корректности списка избранных книг
+    def test_get_list_of_favorites_books_list_is_correct(self, books_collector, prepare_books):
+        books_collector.add_book_in_favorites(fantasy_book)
+        books_collector.add_book_in_favorites(detective_book)
+        assert len(books_collector.get_list_of_favorites_books()) == 2
