@@ -18,9 +18,10 @@ class TestBooksCollector:
         books_collector.add_new_book('Сияние Сияние Сияние Сияние Сияниееееееее')
         assert len(books_collector.get_books_genre()) == 0
 
-    # Проверка установки корректного жанра для книги
-    def test_set_book_genre_get_genre_success(self, books_collector, prepare_books):
-        assert books_collector.get_book_genre(comedy_book) == 'Комедии'
+    # Проверка, что если жанр не входит в список genre, он не устанавливается
+    def test_set_book_genre_invalid_genre(self, books_collector, prepare_books):
+        books_collector.set_book_genre(fantasy_book, 'Биография')
+        assert books_collector.books_genre[fantasy_book] != 'Биография'
 
     # Проверка вывода книги определенного жанра
     def test_get_books_with_specific_genre_book_get_list_genre(self, books_collector, prepare_books):
@@ -54,7 +55,7 @@ class TestBooksCollector:
         assert len(books_collector.get_list_of_favorites_books()) == 1
 
     # Проверка удаления книги из избранного
-    def test_delete_book_from_favorites_delete_one_book_success(self, books_collector, prepare_books):
+    def test_delete_book_from_favorites_delete_one_book_success(self, books_collector):
         books_collector.add_book_in_favorites(detective_book)
         books_collector.delete_book_from_favorites(detective_book)
         assert books_collector.get_list_of_favorites_books() == []
