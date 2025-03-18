@@ -1,0 +1,5 @@
+fantasy_book = 'Марсианин'
+horror_book = 'Сияние'
+detective_book = 'Рассказы о Шерлоке Холмсе'
+child_book = 'Маленький принц'
+comedy_book = 'Благие знамения'

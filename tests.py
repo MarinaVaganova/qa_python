@@ -1,7 +1,7 @@
 import pytest
 
 
-from conftest import fantasy_book, horror_book, detective_book, child_book, comedy_book
+from data import fantasy_book, horror_book, detective_book, child_book, comedy_book
 
 
 # класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector

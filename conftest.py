@@ -1,13 +1,7 @@
 import pytest
 
 from main import BooksCollector
-
-
-fantasy_book = 'Марсианин'
-horror_book = 'Сияние'
-detective_book = 'Рассказы о Шерлоке Холмсе'
-child_book = 'Маленький принц'
-comedy_book = 'Благие знамения'
+from data import fantasy_book, horror_book, detective_book, child_book, comedy_book
 
 @pytest.fixture(scope = 'function')
 def books_collector():
